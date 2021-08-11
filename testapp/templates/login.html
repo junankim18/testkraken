@@ -1,0 +1,10 @@
+<div>
+    <h1>hello</h1>
+    <h3>LOGIN</h3>
+    {% if error %} {{error}} {% endif %}
+    <form action="{% url 'testapp:login' %}" method="POST">
+        {% csrf_token %} {{form.as_p}}
+        <button type="submit">SUBMIT</button>
+    </form>
+    <a href="{% url 'testapp:main' %}"><button>go to MAIN</button></a>
+</div>

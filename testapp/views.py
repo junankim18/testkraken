@@ -172,3 +172,20 @@ def page(request, my_id, other_id):
     }
     return render(request, "page.html", ctx)
     
+def trade (request, pk):
+    user = request.user
+    tradeuser = User.objects.get(id = pk)
+    tradecard = Player.objects.get(user = tradeuser)
+    tradecard.trade.add(user)
+    tradecard.save()
+
+    return redirect ('/')
+
+def tradepage (request):
+    user = request.user
+    cards = list(Player.objects.filter(user = user))
+    ctx = {
+        'cards': cards
+    }
+
+    return render (request, 'trade.html', ctx)

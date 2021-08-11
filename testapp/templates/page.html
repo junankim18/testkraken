@@ -6,7 +6,7 @@
 {% for card in cards %}
 <div >
 <img src = "{{card.photo.url}}", alt = "", width = "300">
-<a href = ""><button>trade</button></a>
+<a href = "{% url 'testapp:trade' card.id %}"><button>trade</button></a>
 {% comment %} 화이팅! {% endcomment %}
 </div>
 {% endfor %}

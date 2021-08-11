@@ -17,6 +17,8 @@ urlpatterns = [
     path('find_card', find_card, name="find_card"),
     path('get/<int:pk>', get, name="get"),
     path('page/<int:my_id>/<int:other_id>', page, name = "page"),
+    path('trade/<int:pk>', trade, name = "trade"),
+    path('tradepage/', tradepage, name = "tradepage"),
    # 나의 id와 상대방의 id를 동시에 전달함 
 
 ]
