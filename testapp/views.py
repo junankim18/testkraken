@@ -165,6 +165,7 @@ def page(request, my_id, other_id):
     other_profile = Profile.objects.get(user = other)
     cards = list(Player.objects.filter(user = other))
     ctx = {
+        'me': me, 
         'other' : other,
         'cards' : cards,
 

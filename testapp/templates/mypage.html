@@ -23,6 +23,7 @@
 <div>
 {{following}}
 <a href = "{% url 'testapp:page' user.id following.id%}"><button>view page</button></a>
+{% comment %} 나의 아이디와 남의 아이디를 동시에 전달해 trade가 편하게 함 {% endcomment %}
 </div>
 {% endfor %}
 
