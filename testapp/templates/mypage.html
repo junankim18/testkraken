@@ -1,0 +1,35 @@
+<h1>나를 팔로우하고 싶은 사람</h1>
+
+{% for user in notyetlist %}
+<div>
+{{user}}
+</div>
+
+<a href = "{% url 'testapp:accept' user.id %}"><button>yes</button></a>
+<a href = "{% url 'testapp:reject' user.id %}"><button>no</button></a>
+
+{% endfor %}
+
+<h1>팔로워</h1>
+{% for follower in followers%}
+<div>
+{{follower}}
+<a href = "{% url 'testapp:page' user.id follower.id%}"><button>view page</button></a>
+</div>
+{% endfor %}
+
+<h1>팔로잉</h1>
+{% for following in followings%}
+<div>
+{{following}}
+<a href = "{% url 'testapp:page' user.id following.id%}"><button>view page</button></a>
+</div>
+{% endfor %}
+
+<h1>my card</h1>
+
+{% for card in cards %}
+<div>
+<img src = "{{card.photo.url}}", width = "600">
+</div>
+{% endfor %}

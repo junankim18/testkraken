@@ -1,0 +1,11 @@
+<h1>Hi! This is {{other.nickname}}</h1>
+
+<h2>Card List</h2>
+
+{% for card in cards %}
+<div style = "align: center">
+<img src = "{{card.photo.url}}", alt = "", width = "300">
+<a href = ""><button>trade</button></a>
+</div>
+{% endfor %}
+
