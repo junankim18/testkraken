@@ -1,5 +1,37 @@
 {{player.player_name}}
+<p id="attack_number">attack {{player.attack}}</p>
+<p>defense {{player.defense}}</p>
 
-<img src = "{{player.photo.url}}", alt = "" width = "600">
+<img src="{{player.photo.url}}" , alt="" width="600" />
 
-<a href = "{% url 'testapp:get' player.id %}"><button>Get</button></a> 
+<a href="{% url 'testapp:get' player.id %}"><button>Get</button></a>
+
+<button onclick="attack({{player.id}})">공격력을 올리기!</button>
+<button>방어력 낮춰주세요</button>
+
+<script>
+    const request = new XMLHttpRequest();
+
+    const attack = (id) => {
+        const url = "attack/";
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.send(JSON.stringify({ id }));
+    };
+
+    const handleResponse = () => {
+        if (request.status <= 400) {
+            const element = document.querySelector("#attack_number");
+            const attack_num = Number(element.innerText.split(" ")[1]);
+            const revised_num = attack_num + 10;
+            element.innerText = "attack " + revised_num;
+            element.style = "display:none";
+        }
+    };
+
+    request.onreadystatechange = () => {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            handleResponse();
+        }
+    };
+</script>
