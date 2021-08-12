@@ -20,5 +20,6 @@ urlpatterns = [
     path('trade/<int:pk>', trade, name="trade"),
     path('tradepage/', tradepage, name="tradepage"),
     # 나의 id와 상대방의 id를 동시에 전달함
+    path('attack/', attack, name='attack'),
 
 ]

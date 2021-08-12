@@ -1,3 +1,6 @@
+from django.http import HttpResponse, JsonResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 from .forms import RegisterForm
 from django.contrib.auth import authenticate, login, logout
@@ -6,6 +9,7 @@ from django.shortcuts import render
 from .models import *
 
 import random
+
 
 def main(request):
     user = request.user
@@ -72,11 +76,12 @@ def signup_view(request):
         }
         return render(request, 'signup.html', ctx)
 
+
 def find(request):
     user = request.user
     userlist = list(User.objects.all())
     userlist.remove(user)
-    
+
     randomuser = random.choice(userlist)
 
     ctx = {
@@ -85,39 +90,42 @@ def find(request):
 
     return render(request, 'randomuser.html', ctx)
 
+
 def follow(request, pk):
     user = request.user
-    randomuser = User.objects.get(id = pk)
-    randprofile = Profile.objects.get(user = randomuser)
+    randomuser = User.objects.get(id=pk)
+    randprofile = Profile.objects.get(user=randomuser)
     randprofile.notyet.add(user)
     randprofile.save()
 
     return redirect('/')
 
+
 def mypage(request):
     user = request.user
-    profile = Profile.objects.get(user = user)
+    profile = Profile.objects.get(user=user)
     notyetlist = list(profile.notyet.all())
     followers = list(profile.follower.all())
     followings = list(profile.following.all())
-    cards = list(Player.objects.filter(user = user))
+    cards = list(Player.objects.filter(user=user))
     ctx = {
-        'profile' : profile, 
+        'profile': profile,
         'notyetlist': notyetlist,
-        'followers': followers, 
-        'followings': followings, 
+        'followers': followers,
+        'followings': followings,
         'cards': cards,
     }
 
     return render(request, 'mypage.html', ctx)
 
+
 def accept(request, pk):
     user = request.user
-    profile = Profile.objects.get(user = user)
-    
-    others = User.objects.get(id= pk)
-    others_profile = Profile.objects.get(user = others)
-    
+    profile = Profile.objects.get(user=user)
+
+    others = User.objects.get(id=pk)
+    others_profile = Profile.objects.get(user=others)
+
     profile.follower.add(others)
     profile.notyet.remove(others)
     profile.save()
@@ -126,13 +134,14 @@ def accept(request, pk):
     others_profile.save()
     return redirect('/')
 
+
 def reject(request, pk):
     user = request.user
-    profile = Profile.objects.get(user = user)
-    
-    others = User.objects.get(id= pk)
-    others_profile = Profile.objects.get(user = others)
-    
+    profile = Profile.objects.get(user=user)
+
+    others = User.objects.get(id=pk)
+    others_profile = Profile.objects.get(user=others)
+
     profile.notyet.remove(others)
     profile.save()
 
@@ -141,51 +150,65 @@ def reject(request, pk):
 
 def find_card(request):
     user = request.user
-    players = list(Player.objects.filter(user = None))
+    players = list(Player.objects.filter(user=None))
     player = random.choice(players)
 
     ctx = {
         'player': player
-    }    
+    }
 
     return render(request, 'randomcard.html', ctx)
 
 
 def get(request, pk):
     user = request.user
-    card = Player.objects.get(id = pk)
+    card = Player.objects.get(id=pk)
     card.user = user
     card.save()
 
     return redirect('/')
 
+
 def page(request, my_id, other_id):
     me = request.user
-    other = User.objects.get(id = other_id)
-    other_profile = Profile.objects.get(user = other)
-    cards = list(Player.objects.filter(user = other))
+    other = User.objects.get(id=other_id)
+    other_profile = Profile.objects.get(user=other)
+    cards = list(Player.objects.filter(user=other))
     ctx = {
-        'me': me, 
-        'other' : other,
-        'cards' : cards,
+        'me': me,
+        'other': other,
+        'cards': cards,
 
     }
     return render(request, "page.html", ctx)
-    
-def trade (request, pk):
+
+
+def trade(request, pk):
     user = request.user
-    tradeuser = User.objects.get(id = pk)
-    tradecard = Player.objects.get(user = tradeuser)
+    tradeuser = User.objects.get(id=pk)
+    tradecard = Player.objects.get(user=tradeuser)
     tradecard.trade.add(user)
     tradecard.save()
 
-    return redirect ('/')
+    return redirect('/')
 
-def tradepage (request):
+
+def tradepage(request):
     user = request.user
-    cards = list(Player.objects.filter(user = user))
+    cards = list(Player.objects.filter(user=user))
     ctx = {
         'cards': cards
     }
 
-    return render (request, 'trade.html', ctx)
+    return render(request, 'trade.html', ctx)
+
+
+@csrf_exempt
+def attack(request):
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        player_id = req['id']
+        player = Player.objects.get(id=player_id)
+        player.attack += 10
+        player.save()
+    return JsonResponse({'id': player_id})
