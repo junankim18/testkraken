@@ -20,20 +20,54 @@
 
 <h1>팔로잉</h1>
 {% for following in followings%}
-<div>
+<div id = "following-{{following.id}}">
+<!-- following의 id마다 div의 id를 다르게 하여 각각에 적용 가능 -->
 {{following}}
+<br>
 <a href = "{% url 'testapp:page' user.id following.id%}"><button>view page</button></a>
 {% comment %} 나의 아이디와 남의 아이디를 동시에 전달해 trade가 편하게 함 {% endcomment %}
+<button onclick = "cancel_follow({{user.id}}, {{following.id}})">Cancel</button>
+<!-- 팔로잉과 팔로워를 동시에 없애야 함 -->
+<br><br>
 </div>
 {% endfor %}
 
 <h1>my card</h1>
 
-{% for card in cards %}
+<!-- {% for card in cards %}
 <div>
 <img src = "{{card.photo.url}}", width = "600">
 </div>
-{% endfor %}
-
+{% endfor %} -->
+<!-- 미디어 폴더에 사진 없어서 주석처리함 -->
 
 <a href = "{% url 'testapp:tradepage'%}"><button>trade 요청받은거 확인하기</button></a>
+
+<script>
+    const request = new XMLHttpRequest();
+
+    const cancel_follow = (my_id, other_id) => {   
+        const url = "cancel_follow/";
+        // 이렇게 하니 현재 페이지에 cancel_follow가 붙음
+        request.open("POST", url, true);
+        request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        request.send(JSON.stringify({my_id, other_id}));
+        // 여러 변수를 한 번에 보냄
+    };
+
+    const handleResponse = () => {
+        if (request.status <= 400) {
+            const {my_id, other_id} = JSON.parse(request.response)
+            // views에 썼던 JsonResponse에 간 변수들을 받아옴
+            const element = document.querySelector(`#following-${other_id}`);
+            // backtick을 써야 변수를 포함할 수 있음
+            element.style = "display:none";
+        }
+    };
+
+    request.onreadystatechange = () => {
+        if (request.readyState === XMLHttpRequest.DONE) {
+            handleResponse();
+        }
+    };
+</script>

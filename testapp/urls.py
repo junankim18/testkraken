@@ -21,5 +21,8 @@ urlpatterns = [
     path('tradepage/', tradepage, name="tradepage"),
     # 나의 id와 상대방의 id를 동시에 전달함
     path('attack/', attack, name='attack'),
-
+    path('mypage/cancel_follow/', cancel_follow, name='cancel_follow'),
+    #cancel_follow page 추가
+    #앞에 mypage가 붙는 이유는 mypage.html에서 button을 눌러 자동으로 붙는다
+    #mypage 없앨 수 있는 방법 고민 중
 ]

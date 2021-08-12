@@ -212,3 +212,27 @@ def attack(request):
         player.attack += 10
         player.save()
     return JsonResponse({'id': player_id})
+
+@csrf_exempt #필수
+def cancel_follow(request):
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        #req에 dict넣음
+        
+        my_id = req['my_id']
+        other_id = req['other_id']
+        #변수에 삽입
+
+        my_profile = Profile.objects.get(id = my_id)
+        other_profile = Profile.objects.get(id = other_id)
+        
+        my_profile.following.remove(other_id)
+        other_profile.follower.remove(my_id)
+        
+        my_following_list = list(my_profile.following.all())
+        other_following_list = list(other_profile.follower.all())
+        
+        my_profile.save()
+        other_profile.save()
+
+    return JsonResponse({'my_id': my_id, 'other_id': other_id})
