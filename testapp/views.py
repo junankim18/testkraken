@@ -213,6 +213,17 @@ def attack(request):
         player.save()
     return JsonResponse({'id': player_id})
 
+@csrf_exempt
+def defense(request):
+    if request.method == 'POST':
+        req = json.loads(request.body)
+        player_id = req['id']
+        player = Player.objects.get(id=player_id)
+        player.defense -= 10
+        player.save()
+    return JsonResponse({'id': player_id})
+
+
 @csrf_exempt #필수
 def cancel_follow(request):
     if request.method == 'POST':

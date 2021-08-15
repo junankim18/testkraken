@@ -25,4 +25,5 @@ urlpatterns = [
     #cancel_follow page 추가
     #앞에 mypage가 붙는 이유는 mypage.html에서 button을 눌러 자동으로 붙는다
     #mypage 없앨 수 있는 방법 고민 중
+    path('defense/', defense, name='defense'),
 ]
