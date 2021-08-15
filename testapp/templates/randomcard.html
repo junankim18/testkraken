@@ -1,13 +1,13 @@
 {{player.player_name}}
 <p id="attack_number">attack {{player.attack}}</p>
-<p>defense {{player.defense}}</p>
+<p id='defense_number'>defense {{player.defense}}</p>
 
 <img src="{{player.photo.url}}" , alt="" width="600" />
 
 <a href="{% url 'testapp:get' player.id %}"><button>Get</button></a>
 
 <button onclick="attack({{player.id}})">공격력을 올리기!</button>
-<button>방어력 낮춰주세요</button>
+<button onclick="defense({{player.id}})" id = "defense_comment">방어력 낮추기!</button>
 
 <script>
     const request = new XMLHttpRequest();
@@ -25,13 +25,45 @@
             const attack_num = Number(element.innerText.split(" ")[1]);
             const revised_num = attack_num + 10;
             element.innerText = "attack " + revised_num;
-            element.style = "display:none";
         }
     };
+    
 
     request.onreadystatechange = () => {
         if (request.readyState === XMLHttpRequest.DONE) {
             handleResponse();
+        }
+    };
+</script>
+
+<script>
+    const request_defense = new XMLHttpRequest();
+
+    const defense = (id) => {
+        const url = "defense/";
+        request_defense.open("POST", url, true);
+        request_defense.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        request_defense.send(JSON.stringify({ id }));
+    };
+
+    const handleResponse_defense = () => {
+    // const 다른 이름 써야함
+        if (request_defense.status <= 400) {
+            const element_num = document.getElementById("defense_number");
+            // document.getElementById(" ") #없이 id 선택 가능
+            const defense_num = Number(element_num.innerText.split(" ")[1]);
+            const subtract_num = defense_num - 10;
+            element_num.innerText = "defense " + subtract_num;
+            const element_button= document.getElementById("defense_comment");
+            element_button.innerText = "방어력 낮췄다!";
+            // 방어력 낮췄다!는 새로고침 시 방어력 낮추기!로 다시 바뀜
+        }
+    };
+
+    request_defense.onreadystatechange = () => {
+        if (request_defense.readyState === XMLHttpRequest.DONE) {
+            handleResponse_defense();
+            // request 와 handleResponse 에 해당하는 함수명 통일
         }
     };
 </script>
