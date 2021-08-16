@@ -203,6 +203,17 @@ def tradepage(request):
     return render(request, 'trade.html', ctx)
 
 
+def tradeaccept(request, trade_id, card_id):
+    user = request.user
+    tradeuser = User.objects.get(id=trade_id)
+    tradecard = Player.objects.get(id=card_id)
+
+    tradecard.trade.clear()
+    tradecard.user = tradeuser
+    tradecard.save()
+
+    return redirect('/')
+
 @csrf_exempt
 def attack(request):
     if request.method == 'POST':
