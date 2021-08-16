@@ -20,6 +20,7 @@ urlpatterns = [
     path('trade/<int:pk>', trade, name="trade"),
     path('tradepage/', tradepage, name="tradepage"),
     # 나의 id와 상대방의 id를 동시에 전달함
+    path('tradeaccept/<int:trade_id>/<int:card_id>', tradeaccept, name="tradeaccept"),
     path('attack/', attack, name='attack'),
     path('mypage/cancel_follow/', cancel_follow, name='cancel_follow'),
     #cancel_follow page 추가
